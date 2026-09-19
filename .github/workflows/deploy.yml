@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'site/**'
+      - 'index.html'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -35,13 +35,11 @@ jobs:
 
       - name: Validate website
         run: |
-          test -f site/index.html
+          test -f index.html
 
       - name: Deploy website to S3
         env:
           S3_BUCKET: ${{ vars.S3_BUCKET }}
         run: |
           test -n "$S3_BUCKET"
-          aws s3 sync site/ "s3://$S3_BUCKET/" \
-            --delete \
-            --no-follow-symlinks
+          aws s3 cp index.html "s3://$S3_BUCKET/index.html"
